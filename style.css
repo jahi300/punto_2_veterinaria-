@@ -4,19 +4,28 @@
     border: 0;
 }
 
+/*Segmento de login*/
+
 .columnaPrincipal {
+    padding: 40px;
+    width: 30%;
     margin: auto;
-    background-color: rgb(21, 106, 77);
+    background-image: url(https://www.codigonuevo.com/binrepository/1519x980/160c0/1200d980/none/2283274/YYEC/captura-pantalla-2020-10-23-10-02-15-930x600_CN252064_MG11293846.png);
+    background-size: cover;
+    background-position: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 60px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .columnaPrincipal div {
     display: block;
     margin: auto 40px;
-
 }
 
 
@@ -27,7 +36,59 @@
 
 .columnaPrincipal input {
     text-align: center;
-    border-radius: 5%;
+    width: 300px;
+    padding: 5px
+}
 
 
+#botones {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+
+#botonLogin {
+    width: 100px;
+    height: 40px;
+    background-color: rgb(35, 170, 35);
+    color: white;
+}
+
+#botonRegistro {
+    width: 100px;
+    height: 40px;
+    background-color: rgb(145, 173, 145);
+    color: white;
+}
+
+/*Segmento del Registro*/
+
+.columnaRegistro {
+    padding: 40px;
+    width: 30%;
+    margin: auto;
+    background-color: rgb(68, 149, 122);
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+.columnaRegistro input {
+    width: 450px;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+
+#botonConfirmar {
+    width: 100px;
+    height: 40px;
+    background-color: rgb(102, 193, 102);
+    color: white;
 }
