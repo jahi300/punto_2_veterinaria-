@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.columnaPrincipal {
+    margin: auto;
+    background-color: rgb(21, 106, 77);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+
+.columnaPrincipal div {
+    display: block;
+    margin: auto 40px;
+
+}
+
+
+.columnaPrincipal img {
+    width: 100px;
+    height: 100px;
+}
+
+.columnaPrincipal input {
+    text-align: center;
+    border-radius: 5%;
+
+
+}
