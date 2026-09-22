@@ -96,6 +96,6 @@ if (botonConfirmar) {
         }
 
         alert("¡Registro exitoso! Ya puedes iniciar sesión.");
-        window.location.href = "login.html"; 
+        window.location.href = "index.html"; 
     });
 }
