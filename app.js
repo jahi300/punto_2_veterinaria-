@@ -1,6 +1,6 @@
 const supabaseUrl = 'https://issgjubagtekjzpedwua.supabase.co';
 const supabaseKey = 'sb_publishable_Sy-5fwqD4q6d4WWE2mpfjA_xQESUwvO';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseClient = window.supabase?.createClient(supabaseUrl, supabaseKey);
 
 const botonLogin = document.getElementById('botonLogin');
 const botonRegistro = document.getElementById('botonRegistro');
@@ -19,7 +19,12 @@ if (botonLogin) {
             return;
         }
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        if (!supabaseClient) {
+            alert("No se pudo conectar con el servicio. Revisa tu conexión e inténtalo de nuevo.");
+            return;
+        }
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: correo,
             password: contrasena
         });
@@ -56,8 +61,13 @@ if (botonConfirmar) {
             alert("Por favor, completa los campos obligatorios.");
             return;
         }
+
+        if (!supabaseClient) {
+            alert("No se pudo conectar con el servicio. Revisa tu conexión e inténtalo de nuevo.");
+            return;
+        }
 		
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        const { data: authData, error: authError } = await supabaseClient.auth.signUp({
             email: correo,
             password: contrasena
         });
@@ -68,7 +78,7 @@ if (botonConfirmar) {
         }
 		
         const userId = authData.user.id; // El ID único generado por Supabase
-        const { error: errorPerfil } = await supabase.from('perfiles').insert([
+        const { error: errorPerfil } = await supabaseClient.from('perfiles').insert([
             { id: userId, email: correo, rol: 'cliente' }
         ]);
 
@@ -77,7 +87,7 @@ if (botonConfirmar) {
             return;
         }
 		
-        const { error: errorPropietario } = await supabase.from('propietario').insert([
+        const { error: errorPropietario } = await supabaseClient.from('propietario').insert([
             {
                 id_perfil: userId,
                 nombrepropietario: nombre,
