@@ -1,58 +1,101 @@
+const supabaseUrl = 'https://issgjubagtekjzpedwua.supabase.co';
+const supabaseKey = 'sb_publishable_Sy-5fwqD4q6d4WWE2mpfjA_xQESUwvO';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const botonLogin = document.getElementById('botonLogin');
 const botonRegistro = document.getElementById('botonRegistro');
-const inputUsuario = document.getElementById('inputUsuario');
-const inputContrasena = document.getElementById('inputContrasena');
-
-
 const botonConfirmar = document.getElementById('botonConfirmar');
-const inputNombre = document.getElementById('inputNombre');
-const inputApellido = document.getElementById('inputApellido');
-const inputCorreo = document.getElementById('inputCorreo');
 
 
-// 3. Evento para el botón de INICIAR SESIÓN (Solo se ejecuta si existe en la página actual)
 if (botonLogin) {
-    botonLogin.addEventListener('click', function(e) {
-        e.preventDefault(); // Evita que la página se recargue sola
+    botonLogin.addEventListener('click', async function(e) {
+        e.preventDefault(); 
         
-        const valorUsuario = inputUsuario.value;
-        const valorContrasena = inputContrasena.value;
+        const correo = document.getElementById('inputUsuario').value;
+        const contrasena = document.getElementById('inputContrasena').value;
 
-        // Validación de campos vacíos para el login
-        if (valorUsuario === "" || valorContrasena === "") {
+        if (correo === "" || contrasena === "") {
             alert("Por favor, completa ambos campos.");
+            return;
+        }
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: correo,
+            password: contrasena
+        });
+
+        if (error) {
+            alert("Error al iniciar sesión: " + error.message);
         } else {
-            // Si todo está bien, redirige a la página de sesión
             window.location.href = "dashboard.html";
         }
     });
 }
 
-
-// 4. Evento para el botón de REGISTRO (El botón que está en el login para ir al formulario)
 if (botonRegistro) {
     botonRegistro.addEventListener('click', function(e) {
-        e.preventDefault(); // Evita que la página se recargue sola
-        
-        // Redirige directamente a la página de registro
+        e.preventDefault(); 
         window.location.href = "registro.html";
     });
 }
 
-
-// 5. Evento para el botón CONFIRMAR (El botón que está dentro de tu formulario de registro)
 if (botonConfirmar) {
-    botonConfirmar.addEventListener('click', function(e) {
-        e.preventDefault(); // Evita que la página se recargue sola
+    botonConfirmar.addEventListener('click', async function(e) {
+        e.preventDefault(); 
 
-        // Validación de campos obligatorios vacíos
-        if (inputNombre.value === "" || inputApellido.value === "" || inputCorreo.value === "") {
+        const nombre = document.getElementById('inputNombre').value;
+        const apellido = document.getElementById('inputApellido').value;
+        const tipoDoc = document.getElementById('inputTipoDocumento').value;
+        const numDoc = document.getElementById('inputNumero').value;
+        const direccion = document.getElementById('inputDireccion').value;
+        const telefono = document.getElementById('inputTelefono').value;
+        const correo = document.getElementById('inputCorreo').value;
+        const contrasena = document.getElementById('inputContrasenaRegistro').value; 
+
+        if (nombre === "" || apellido === "" || correo === "" || contrasena === "" || numDoc === "") {
             alert("Por favor, completa los campos obligatorios.");
-        } else {
-            alert("¡Registro exitoso!");
-            // Redirige de regreso al login o al dashboard cuando termine
-            window.location.href = "index.html"; 
+            return;
         }
+		
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: correo,
+            password: contrasena
+        });
+
+        if (authError) {
+            alert("Error en el registro: " + authError.message);
+            return;
+        }
+		
+        const userId = authData.user.id; // El ID único generado por Supabase
+        const { error: errorPerfil } = await supabase.from('perfiles').insert([
+            { id: userId, email: correo, rol: 'cliente' }
+        ]);
+
+        if (errorPerfil) {
+            alert("Error al crear el perfil: " + errorPerfil.message);
+            return;
+        }
+		
+        const { error: errorPropietario } = await supabase.from('propietario').insert([
+            {
+                id_perfil: userId,
+                nombrepropietario: nombre,
+                apellidospropietario: apellido,
+                tipodocumento: tipoDoc,
+                numerodocumento: numDoc,
+                telefono: telefono,
+                direccion: direccion,
+                email: correo
+            }
+        ]);
+
+        if (errorPropietario) {
+            alert("Error al guardar datos del propietario: " + errorPropietario.message);
+            return;
+        }
+
+        alert("¡Registro exitoso! Ya puedes iniciar sesión.");
+        window.location.href = "login.html"; 
     });
 }
